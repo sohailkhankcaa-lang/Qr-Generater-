@@ -12,7 +12,7 @@
       text-align: center;
     }
 
-    /* HEADER LOGO */
+    /* HEADER */
     .header {
       background: #ffffff;
       padding: 15px;
@@ -24,7 +24,7 @@
       max-width: 90%;
     }
 
-    /* MAIN CARD */
+    /* CARD */
     .container {
       background: #ffffff;
       margin: 30px auto;
@@ -58,7 +58,7 @@
     /* QR AREA */
     #qr-wrapper {
       position: relative;
-      display: none; /* hidden until QR generate */
+      display: none;   /* QR generate hone se pehle hidden */
       margin-top: 25px;
     }
 
@@ -67,7 +67,7 @@
       height: 220px;
     }
 
-    /* CENTER LOGO (hidden by default) */
+    /* QR CENTER LOGO */
     #logo-center {
       position: absolute;
       top: 50%;
@@ -79,7 +79,17 @@
       padding: 6px 10px;
       border-radius: 10px;
       object-fit: contain;
-      display: none; /* VERY IMPORTANT */
+      display: none;   /* pehle hidden */
+    }
+
+    /* SCREENSHOT TEXT */
+    #screenshot-text {
+      display: none;   /* pehle hidden */
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #d00000;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -92,16 +102,23 @@
 
   <!-- FORM -->
   <div class="container">
-    <h3>Enter Details to Generate QR</h3>
+    <h3>नाम और मोबाइल नंबर दर्ज करें</h3>
 
-    <input type="text" id="name" placeholder="Enter Name">
-    <input type="number" id="mobile" placeholder="Enter Mobile Number">
+    <input type="text" id="name" placeholder="नाम लिखें">
+    <input type="number" id="mobile" placeholder="मोबाइल नंबर लिखें">
 
-    <button onclick="generateQR()">Generate QR</button>
+    <button onclick="generateQR()">QR Generate करें</button>
 
+    <!-- QR -->
     <div id="qr-wrapper">
       <div id="qrcode"></div>
       <img id="logo-center" src="logo.png">
+    </div>
+
+    <!-- HINDI MESSAGE -->
+    <div id="screenshot-text">
+      कृपया इस बारकोड का<br>
+      स्क्रीनशॉट लें / लेवें
     </div>
   </div>
 
@@ -114,7 +131,7 @@
       var mobile = document.getElementById("mobile").value.trim();
 
       if (name === "" || mobile === "") {
-        alert("Please enter Name and Mobile Number");
+        alert("कृपया नाम और मोबाइल नंबर भरें");
         return;
       }
 
@@ -129,13 +146,12 @@
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      /* SHOW QR + LOGO ONLY AFTER GENERATION */
+      /* SHOW AFTER QR GENERATE */
       document.getElementById("qr-wrapper").style.display = "inline-block";
       document.getElementById("logo-center").style.display = "block";
+      document.getElementById("screenshot-text").style.display = "block";
     }
   </script>
 
 </body>
 </html>
-
-
