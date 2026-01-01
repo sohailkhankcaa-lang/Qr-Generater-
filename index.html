@@ -49,7 +49,7 @@ button{
   z-index:0;
 }
 
-/* TEXT POSITIONS (SCREEN ONLY) */
+/* TEXT */
 .name{
   position:absolute;
   left:85px;
@@ -104,7 +104,7 @@ button{
 
 <h3>Bulk Invitation Generator</h3>
 
-<textarea id="data" placeholder="NAME 966220561&#10;NAME 8696797115"></textarea><br>
+<textarea id="data" placeholder=" NAME 966220561&#10;NAME 8696797115"></textarea><br>
 <button onclick="generate()">Generate</button>
 
 <div id="output"></div>
@@ -158,7 +158,6 @@ function generate(){
   });
 }
 
-/* COPY IMAGE – TEMPLATE + QR ONLY (NO TEXT REDRAW) */
 async function copyCard(index){
   const card = document.getElementById("card"+index);
   const btn  = document.getElementById("copyBtn"+index);
@@ -168,7 +167,7 @@ async function copyCard(index){
   canvas.height = card.offsetHeight;
   const ctx = canvas.getContext("2d");
 
-  /* Draw template */
+  // Background
   const bg = card.querySelector(".template");
   await new Promise(r=>{
     const img = new Image();
@@ -179,7 +178,20 @@ async function copyCard(index){
     };
   });
 
-  /* Draw QR ONLY */
+  // Text
+  const lucky = card.querySelector(".lucky").innerText;
+  const name = card.querySelector(".name").innerText;
+  const mobile = card.querySelector(".mobile").innerText;
+
+  ctx.fillStyle="#000";
+  ctx.font="bold 20px Arial";
+  ctx.fillText(lucky, canvas.width-120, 60);
+
+  ctx.font="bold 18px Arial";
+  ctx.fillText(name, 85, 185);
+  ctx.fillText(mobile, 90, 240);
+
+  // QR
   const qrImg = card.querySelector(".qr img");
   await new Promise(r=>{
     const q = new Image();
@@ -190,12 +202,13 @@ async function copyCard(index){
     };
   });
 
-  /* Copy to clipboard */
+  // Copy to clipboard
   canvas.toBlob(async blob=>{
     await navigator.clipboard.write([
       new ClipboardItem({ "image/png": blob })
     ]);
 
+    // Button feedback (NO ALERT)
     const oldText = btn.innerHTML;
     btn.innerHTML = "✔ COPIED";
     btn.disabled = true;
