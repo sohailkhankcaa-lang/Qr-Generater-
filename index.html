@@ -88,11 +88,14 @@ button{
 
 /* COPY BUTTON */
 .copy-btn{
-  margin-bottom:6px;
   background:#000;
   color:#fff;
   border:none;
   border-radius:5px;
+}
+
+.copy-btn:disabled{
+  background:green;
 }
 </style>
 </head>
@@ -101,7 +104,7 @@ button{
 
 <h3>Bulk Invitation Generator</h3>
 
-<textarea id="data" placeholder="AMAN DEEP JI 966220561&#10;ISWAR RAM JI 8696797115"></textarea><br>
+<textarea id="data" placeholder=" NAME 966220561&#10;NAME 8696797115"></textarea><br>
 <button onclick="generate()">Generate</button>
 
 <div id="output"></div>
@@ -132,7 +135,9 @@ function generate(){
     const wrapper = document.createElement("div");
 
     wrapper.innerHTML = `
-      <button class="copy-btn" onclick="copyCard(${i})">📋 COPY IMAGE</button>
+      <button class="copy-btn" id="copyBtn${i}" onclick="copyCard(${i})">
+        📋 COPY IMAGE
+      </button>
       <div class="card" id="card${i}">
         <img src="template.png" class="template">
         <div class="lucky">${lucky}</div>
@@ -153,15 +158,16 @@ function generate(){
   });
 }
 
-/* COPY IMAGE LOGIC */
 async function copyCard(index){
   const card = document.getElementById("card"+index);
+  const btn  = document.getElementById("copyBtn"+index);
 
   const canvas = document.createElement("canvas");
   canvas.width = card.offsetWidth;
   canvas.height = card.offsetHeight;
   const ctx = canvas.getContext("2d");
 
+  // Background
   const bg = card.querySelector(".template");
   await new Promise(r=>{
     const img = new Image();
@@ -172,7 +178,7 @@ async function copyCard(index){
     };
   });
 
-  // Draw texts
+  // Text
   const lucky = card.querySelector(".lucky").innerText;
   const name = card.querySelector(".name").innerText;
   const mobile = card.querySelector(".mobile").innerText;
@@ -185,7 +191,7 @@ async function copyCard(index){
   ctx.fillText(name, 85, 185);
   ctx.fillText(mobile, 90, 240);
 
-  // Draw QR
+  // QR
   const qrImg = card.querySelector(".qr img");
   await new Promise(r=>{
     const q = new Image();
@@ -196,15 +202,24 @@ async function copyCard(index){
     };
   });
 
+  // Copy to clipboard
   canvas.toBlob(async blob=>{
     await navigator.clipboard.write([
       new ClipboardItem({ "image/png": blob })
     ]);
-    
+
+    // Button feedback (NO ALERT)
+    const oldText = btn.innerHTML;
+    btn.innerHTML = "✔ COPIED";
+    btn.disabled = true;
+
+    setTimeout(()=>{
+      btn.innerHTML = oldText;
+      btn.disabled = false;
+    },3000);
   });
 }
 </script>
 
 </body>
 </html>
-
