@@ -108,12 +108,12 @@ button{
 
 <h3>Bulk Invitation Generator</h3>
 
-<textarea id="data" placeholder="AMAN DEEP JI 966220561&#10;ISWAR RAM JI 8696797115"></textarea><br>
+<textarea id="data" placeholder="NAME 966220561&#10;Name  8696797115"></textarea><br>
 <button onclick="generate()">Generate</button>
 
 <div id="output"></div>
 
-<!-- QR CODE LIB -->
+<!-- QR CODE -->
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 
 <!-- HTML2CANVAS -->
@@ -140,6 +140,17 @@ function generate(){
     const name = parts.join(" ");
     const lucky = i + 1;
 
+    /* 🔴 यही MESSAGE है – यहीं से बदलना होगा 🔴 */
+    const message = 
+`नमस्ते ${name} जी 🙏
+यह आपका QR कोड है।
+कृपया एंट्री के समय यह QR दिखाएँ।
+धन्यवाद।`;
+
+    const waLink =
+      "https://wa.me/91" + mobile +
+      "?text=" + encodeURIComponent(message);
+
     const wrapper = document.createElement("div");
 
     wrapper.innerHTML = `
@@ -155,9 +166,9 @@ function generate(){
         <div class="qr" id="qr${i}"></div>
       </div>
 
-      <!-- TEMPLATE KE BAHAR WHATSAPP LINK -->
+      <!-- WHATSAPP LINK (TEMPLATE KE BAHAR) -->
       <div class="wa-link">
-        <a href="https://wa.me/91${mobile}" target="_blank">
+        <a href="${waLink}" target="_blank">
           💬 Chat on WhatsApp: 91${mobile}
         </a>
       </div>
@@ -174,7 +185,7 @@ function generate(){
   });
 }
 
-/* COPY EXACT CARD IMAGE */
+/* COPY CARD AS IMAGE */
 async function copyCard(index){
   const card = document.getElementById("card"+index);
   const btn  = document.getElementById("copyBtn"+index);
@@ -190,12 +201,12 @@ async function copyCard(index){
       new ClipboardItem({ "image/png": blob })
     ]);
 
-    const oldText = btn.innerHTML;
+    const old = btn.innerHTML;
     btn.innerHTML = "✔ COPIED";
     btn.disabled = true;
 
     setTimeout(()=>{
-      btn.innerHTML = oldText;
+      btn.innerHTML = old;
       btn.disabled = false;
     },3000);
   });
